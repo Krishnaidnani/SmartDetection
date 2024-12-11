@@ -39,9 +39,9 @@ def extract_keypoints(result):
     return np.concatenate([pose, face, lh, rh])
 
 
-Input_data_path = os.path.join("inputData1")
+Input_data_path = os.path.join("inputData3")
 categories = np.array(['Distracted','Attentive'])
-sequences = 30
+sequences = 100
 sequence_length = 30
 
 for category in categories:
@@ -70,7 +70,7 @@ with mp_holistic.Holistic(min_detection_confidence = 0.5 ,min_tracking_confidenc
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1, cv2.LINE_AA)
                 
                         cv2.imshow('OpenCV Feed', image)
-                        cv2.waitKey(1000)
+                        cv2.waitKey(500)
                     else: 
                         cv2.putText(image, 'Collecting frames for {} Video Number {}'.format(category, sequence), (15,12), 
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 1, cv2.LINE_AA)

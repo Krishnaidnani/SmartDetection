@@ -6,12 +6,12 @@ from tf_keras.models import load_model
 
 sequence = []
 predicted_label = "Uncertain" 
-threshold = 0.4
+threshold = 0.8
 categories = np.array(['Distracted','Attentive'])
 
 mp_holistic = mp.solutions.holistic
 mp_drawing = mp.solutions.drawing_utils
-model = load_model('training_data.h5')
+model = load_model('training_data3.h5')
 
 
 def mediapipe_detection(image,model):
@@ -43,7 +43,7 @@ def extract_keypoints(result):
     rh = np.array([[res.x, res.y, res.z] for res in result.right_hand_landmarks.landmark]).flatten() if result.right_hand_landmarks else np.zeros(21*3)
     return np.concatenate([pose, face, lh, rh])
 
-cap = cv2.VideoCapture(1)   
+cap = cv2.VideoCapture(0)   
 with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as holistic:
     while cap.isOpened():
         ret,frame = cap.read()
@@ -58,10 +58,8 @@ with mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=
 
         if(len(sequence)==30):
             res = model.predict(np.expand_dims(sequence,axis=0))[0]
-            if res[np.argmax(res)] > threshold:
-                predicted_label = categories[np.argmax(res)]
-
-
+            if res[np.argmax(res)] >= threshold:
+                predicted_label = (categories[np.argmax(res)])
 
         cv2.rectangle(image, (0, 0), (640, 40), (245, 117, 16), -1)  
         cv2.putText(image, predicted_label, (3, 30), 
